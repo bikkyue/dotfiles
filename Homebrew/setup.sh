@@ -30,7 +30,7 @@ if ! grep -Fxq "$ZSH_PATH" /etc/shells; then
 fi
 
 # デフォルトシェルをインストールしたzshに変更
-chsh -s "$ZSH_PATH"
+sudo chsh -s "$ZSH_PATH"
 
 # 設定の反映を促すメッセージ
 echo "brewでインストールしたzshをデフォルトシェルに設定しました。ターミナルを再起動してください。"
@@ -38,10 +38,9 @@ echo "brewでインストールしたzshをデフォルトシェルに設定し�
 # zpreztoのインストール
 git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
 
-/home/linuxbrew/.linuxbrew/bin/zsh -lc '
 setopt EXTENDED_GLOB
 for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
   ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
-done'
+done
 
 source ~/.zpreztorc
