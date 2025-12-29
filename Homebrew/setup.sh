@@ -34,3 +34,13 @@ chsh -s "$ZSH_PATH"
 
 # 設定の反映を促すメッセージ
 echo "brewでインストールしたzshをデフォルトシェルに設定しました。ターミナルを再起動してください。"
+
+# zpreztoのインストール
+git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+
+setopt EXTENDED_GLOB
+for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
+  ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
+done
+
+source ~/.zpreztorc
