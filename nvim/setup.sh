@@ -1,9 +1,7 @@
-# Nvim用のセットアップスクリプト
-
 #!/usr/bin/env bash
 set -euo pipefail
 
-# default paths (can be overridden by args)
+# defaults (override with args)
 SRC_DEFAULT="$HOME/dotfiles/nvim"
 TARGET_DEFAULT="$HOME/.config/nvim"
 
@@ -12,22 +10,22 @@ TARGET="${2:-$TARGET_DEFAULT}"
 
 timestamp() { date +"%Y%m%d%H%M%S"; }
 
-# portable absolute path resolver
+# portable absolute path resolver (no here-docs)
 abspath() {
-  # prefer readlink -f, then realpath, then python fallback
   if command -v readlink >/dev/null 2>&1; then
-    if readlink -f "$1" >/dev/null 2>&1; then
-      readlink -f "$1" && return
-    fi
+    readlink -f "$1" && return
   fi
   if command -v realpath >/dev/null 2>&1; then
     realpath "$1" && return
   fi
-  # python fallback
-  python3 - <<PY -c >/dev/null 2>&1 || python - <<PY
-import os,sys
-print(os.path.realpath(sys.argv[1]))
-PY
+  if command -v python3 >/dev/null 2>&1; then
+    python3 -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$1" && return
+  fi
+  if command -v python >/dev/null 2>&1; then
+    python -c 'import os,sys; print(os.path.realpath(sys.argv[1]))' "$1" && return
+  fi
+  # fallback: print input
+  echo "$1"
 }
 
 echo "Source: $SRC"
@@ -36,7 +34,7 @@ echo
 
 # check source exists
 if [ ! -e "$SRC" ]; then
-  echo "Error: source '$SRC' does not exist."
+  echo "Error: source '$SRC' does not exist." >&2
   exit 1
 fi
 
@@ -51,28 +49,20 @@ fi
 
 # if target is a symlink that points exactly to source (i.e. whole-dir symlink), nothing to do
 if [ -L "$TARGET" ]; then
-  # try to resolve both
-  target_link="$(readlink "$TARGET" || true)"
-  if [ -n "$target_link" ]; then
-    # if the symlink points to the source (relative or absolute), consider done
-    # resolve full paths if possible
-    src_real="$(cd "$SRC" && pwd -P)"
-    target_real="$(cd "$(dirname "$TARGET")" && { cd "$target_link" 2>/dev/null || true; pwd -P; } 2>/dev/null || true)"
-    if [ "$src_real" = "$target_real" ]; then
-      echo "Target is already a symlink to the source. Nothing to do."
-      exit 0
-    else
-      # backup existing symlink
-      bak="$TARGET.bak.$(timestamp)"
-      echo "Backing up existing target symlink: $TARGET -> $bak"
-      mv "$TARGET" "$bak"
-      mkdir -p "$TARGET"
-    fi
+  src_real="$(abspath "$SRC")"
+  target_real="$(readlink -f "$TARGET" 2>/dev/null || true)"
+  if [ "$src_real" = "$target_real" ]; then
+    echo "Target is already a symlink to the source. Nothing to do."
+    exit 0
+  else
+    bak="$TARGET.bak.$(timestamp)"
+    echo "Backing up existing target symlink: $TARGET -> $bak"
+    mv "$TARGET" "$bak"
+    mkdir -p "$TARGET"
   fi
 fi
 
 # iterate immediate children of SRC (including hidden entries except . and ..)
-# use find to safely handle spaces/newlines
 while IFS= read -r -d '' item; do
   name="$(basename "$item")"
   # skip '.' and '..' just in case
@@ -83,9 +73,8 @@ while IFS= read -r -d '' item; do
 
   # If dest is a symlink that already points to the correct source, skip
   if [ -L "$dest" ]; then
-    # resolve symlink target
     dest_target="$(readlink -f "$dest" 2>/dev/null || true)"
-    src_real="$(readlink -f "$item" 2>/dev/null || true)"
+    src_real="$(abspath "$item" 2>/dev/null || true)"
     if [ -n "$dest_target" ] && [ -n "$src_real" ] && [ "$dest_target" = "$src_real" ]; then
       echo "Skipping (already linked): $dest -> $dest_target"
       continue
