@@ -44,8 +44,4 @@ for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
   ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
 done'
 
-# Nvim-treesitter用、Cコンパイラインストール
-sudo apt update
-sudo apt install build-essential -y
-
 source ~/.zpreztorc
