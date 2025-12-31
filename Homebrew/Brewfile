@@ -1,2 +1,5 @@
 brew "zsh"
 brew "neovim"
+brew "tree-sitter-cli"
+brew "pkg-config"
+brew "llvm"
