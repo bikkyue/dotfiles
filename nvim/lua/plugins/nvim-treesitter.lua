@@ -12,15 +12,31 @@ return {
         "bash",
       })
 
+      vim.treesitter.language.register("bash", { "sh", "zsh" })
+
+      -- FileType: バッファに対して treesitter を開始（安全）
       vim.api.nvim_create_autocmd("FileType", {
         callback = function(args)
+          -- nvim-tree など特殊バッファは除外推奨
+          local ft = vim.bo[args.buf].filetype
+          if ft == "NvimTree" then
+            return
+          end
           pcall(vim.treesitter.start, args.buf)
-          vim.wo[args.buf].foldmethod = "expr"
-          vim.wo[args.buf].foldexpr = "v:lua.vim.treesitter.foldexpr()"
         end,
       })
 
-      vim.treesitter.language.register("bash", { "sh", "zsh" })
+      -- BufWinEnter/WinEnter: 「ウィンドウが存在する」タイミングで fold を設定（安全）
+      vim.api.nvim_create_autocmd({ "BufWinEnter", "WinEnter" }, {
+        callback = function()
+          -- 現在ウィンドウに対して設定する（winid指定で壊さない）
+          if vim.bo.filetype == "NvimTree" then
+            return
+          end
+          vim.wo.foldmethod = "expr"
+          vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+        end,
+      })
     end,
   },
 }
