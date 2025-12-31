@@ -44,14 +44,8 @@ for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
   ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
 done'
 
-# gcc→ccへのシンボリックリンク
-mkdir -p "$HOME/.local/bin"
-gcc_bin="$(ls "$(brew --prefix)"/bin/gcc-* 2>/dev/null | head -n1 || true)"
-if [ -n "$gcc_bin" ]; then
-  ln -sf "$gcc_bin" "$HOME/.local/bin/cc"
-else
-  echo "brew の gcc が見つかりません。'brew install gcc' を確認してください。"
-fi
-export PATH="$HOME/.local/bin:$PATH"
+# Nvim-treesitter用、Cコンパイラインストール
+sudo apt update
+sudo apt install build-essential -y
 
 source ~/.zpreztorc
