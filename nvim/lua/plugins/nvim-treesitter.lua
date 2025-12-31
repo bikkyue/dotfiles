@@ -33,8 +33,6 @@ return {
           if vim.bo.filetype == "NvimTree" then
             return
           end
-          vim.wo.foldmethod = "expr"
-          vim.wo.foldexpr = "v:lua.vim.treesitter.foldexpr()"
         end,
       })
     end,
