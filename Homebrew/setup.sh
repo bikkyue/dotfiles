@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -e
 
+sudo apt update
+sudo apt install -y build-essential libc6-dev binutils
+
 if ! type brew &> /dev/null ; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 else
@@ -43,5 +46,7 @@ setopt EXTENDED_GLOB
 for rcfile in "${ZDOTDIR:-$HOME}"/.zprezto/runcoms/^README.md(.N); do
   ln -s "$rcfile" "${ZDOTDIR:-$HOME}/.${rcfile:t}"
 done'
+
+
 
 source ~/.zpreztorc
