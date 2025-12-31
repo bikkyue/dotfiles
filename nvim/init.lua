@@ -22,6 +22,42 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+local function set_keywords_like_vim_default()
+  local gui = "#ffff60" -- Vim default の Statement guifg
+  local cterm = 11      -- Vim default の Statement ctermfg (bright yellow)
+
+  local groups = {
+    -- Vim syntax
+    "Statement",
+    "Keyword",
+
+    -- Tree-sitter keyword-ish
+    "@keyword",
+    "@keyword.function",
+    "@keyword.return",
+    "@keyword.operator",
+    "@keyword.conditional",
+    "@keyword.repeat",
+    "@keyword.exception",
+    "@conditional",
+    "@repeat",
+    "@exception",
+    "@label",
+  }
+
+  for _, g in ipairs(groups) do
+    vim.api.nvim_set_hl(0, g, {
+      fg = gui,
+      ctermfg = cterm,
+      bold = true,
+      cterm = { bold = true },
+    })
+  end
+end
+
+vim.api.nvim_create_autocmd("ColorScheme", { callback = set_keywords_like_vim_default })
+vim.api.nvim_create_autocmd("VimEnter", { callback = set_keywords_like_vim_default })
+
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
