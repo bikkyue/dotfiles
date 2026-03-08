@@ -5,8 +5,13 @@
   home.homeDirectory = "/home/ubuntu";
 
   home.packages = [
-    pkgs.neovim
+    
   ];
+
+  # LazyVim
+  programs.lazyvim = {
+    enable = true;
+  };
 
   programs.zsh = {
     enable = true;
