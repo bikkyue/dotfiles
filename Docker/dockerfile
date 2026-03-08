@@ -1,0 +1,26 @@
+FROM ubuntu:24.04
+
+# install.sh の実行に必要なパッケージ
+RUN apt-get update \
+    && apt-get install -y \
+        git \
+        sudo \
+        curl \
+        xz-utils \
+        ca-certificates \
+        locales \
+    && locale-gen en_US.UTF-8 \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
+# ubuntu ユーザーにsudo権限を付与
+RUN echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+
+USER ubuntu
+WORKDIR /home/ubuntu
+ENV USER=ubuntu
+
+CMD ["bash"]
