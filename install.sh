@@ -64,6 +64,12 @@ main() {
     enable_flakes
     apply_home_manager
     echo "=== Setup Complete ==="
+    
+    # セットアップ完了後、zsh に切り替え
+    if command -v zsh &> /dev/null; then
+        echo "[info] Switching to zsh..."
+        exec zsh
+    fi
 }
 
 main "$@"
