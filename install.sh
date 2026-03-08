@@ -49,7 +49,7 @@ apply_home_manager() {
     current_user="$(whoami)"
 
     echo "[install] Applying Home Manager configuration for ${current_user}..."
-    export PATH="$HOME/.nix-profile/bin:$PATH"
+    export PATH="$HOME/.nix-profile/bin:$HOME/.local/state/home-manager/gcroots/current-home/home-path/bin:$PATH"
     export USER="${current_user}"
     nix run home-manager/master -- switch --flake "${DOTFILES_DIR}#${current_user}" --impure
     echo "[done] Home Manager applied successfully."
