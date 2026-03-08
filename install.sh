@@ -27,3 +27,6 @@ main() {
     install_nix
     echo "=== Setup Complete ==="
 }
+
+main "$@"
+
