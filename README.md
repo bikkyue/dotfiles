@@ -3,8 +3,8 @@
 ## セットアップ手順
 
 ```
-git clone https://github.com/bikkyue/dotfiles.git
-&& cd dotfiles
+git clone https://github.com/bikkyue/dotfiles.git \
+&& cd dotfiles \
 && bash install.sh
 ```
 
@@ -23,5 +23,6 @@ git clone https://github.com/bikkyue/dotfiles.git
 - starship
 
     zsh用のプロンプト
+    テーマは[Pure Preset](https://starship.rs/presets/pure-preset)を使用 
 
 - tmux
