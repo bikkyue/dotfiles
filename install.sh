@@ -63,7 +63,6 @@ apply_home_manager() {
 
 
 # main
-
 main() {
     echo "=== Dotfiles Setup ==="
     install_nix

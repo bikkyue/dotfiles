@@ -34,8 +34,7 @@
     enableZshIntegration = true;
     settings = {
 
-      # 使用フォーマット：　https://starship.rs/presets/pure-preset
- 
+      # 使用フォーマット：　https://starship.rs/presets/pure-preset 
       format = "$username$hostname$directory$git_branch$git_state$git_status$cmd_duration$line_break$python$character";
       directory.style = "blue";
       character = {
@@ -69,7 +68,7 @@
     };
   };
 
-  # Home Manager のバージョン。変更不要。
+  # Home Manager のバージョン
   home.stateVersion = "24.11";
 
   programs.home-manager.enable = true;
