@@ -2,6 +2,12 @@
 
 ## セットアップ手順
 
+```
+git clone https://github.com/bikkyue/dotfiles.git
+&& cd dotfiles
+&& bash install.sh
+```
+
 ## ディレクトリ構成
 
 ## パッケージ
@@ -17,7 +23,5 @@
 - starship
 
     zsh用のプロンプト
-
-- claude
 
 - tmux

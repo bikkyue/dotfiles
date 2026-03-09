@@ -5,7 +5,11 @@
 set -euo pipefail
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+
+# --------------------
 # Nix インストール
+# --------------------
+
 install_nix() {
     if command -v nix &> /dev/null; then
         echo "[skip] Nix is already installed."
@@ -23,10 +27,10 @@ install_nix() {
 }
 
 
-
 # --------------------
 # Nix Flakes 有効化
 # --------------------
+
 enable_flakes() {
     local nix_conf="$HOME/.config/nix/nix.conf"
 
@@ -41,9 +45,11 @@ enable_flakes() {
     echo "[done] Flakes enabled."
 }
 
+
 # --------------------
 # Home Manager 適用
 # --------------------
+
 apply_home_manager() {
     local current_user
     current_user="$(whoami)"
