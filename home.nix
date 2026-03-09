@@ -13,6 +13,13 @@
     enable = true;
   };
 
+  # bashで入った際にzshへ切り替える。
+  programs.bash = {
+    enable = true;
+    initExtra = "exec ${pkgs.zsh}/bin/zsh";
+  };
+
+  # zsh
   programs.zsh = {
     enable = true;
     initExtra = ''
@@ -21,6 +28,7 @@
     '';
   };
 
+  # starship
   programs.starship = {
     enable = true;
     enableZshIntegration = true;
