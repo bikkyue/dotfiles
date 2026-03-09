@@ -21,6 +21,11 @@
     '';
   };
 
+  programs.starship = {
+    enable = true;
+    enableZshIntegration = true;
+  };
+
   # Home Manager のバージョン。変更不要。
   home.stateVersion = "24.11";
 
