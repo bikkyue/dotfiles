@@ -1,8 +1,8 @@
-{ config, pkgs, ... }:
+{ config, pkgs, username, ... }:
 
 {
-  home.username = "ubuntu";
-  home.homeDirectory = "/home/ubuntu";
+  home.username = username;
+  home.homeDirectory = "/home/${username}";
 
   home.packages = [
     
