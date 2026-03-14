@@ -3,9 +3,12 @@ services:
     build:
       context: .
       dockerfile: dockerfile
+      args:
+        USERNAME: user
     container_name: dotfiles-dev
     volumes:
-      - .:/home/user/dotfiles
+      - .:/home/${USERNAME}/dotfiles
+      - ~/.ssh:/home/${USERNAME}/.ssh:ro
     environment:
       - TERM=xterm-256color
     tty: true
