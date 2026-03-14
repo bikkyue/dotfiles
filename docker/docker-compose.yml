@@ -1,11 +1,11 @@
 services:
-  dotfiles:
+  dev: # サービス名
     build:
       context: .
       dockerfile: dockerfile
       args:
-        USERNAME: user # ユーザ名
-    container_name: container # コンテナ名
+        USERNAME: ${USERNAME} # ユーザ名
+    container_name: ${CONTAINER_NAME} # コンテナ名
     volumes:
       - .:/home/${USERNAME}/dotfiles
 

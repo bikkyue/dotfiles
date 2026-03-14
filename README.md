@@ -42,7 +42,8 @@ docker compose up -d
 ### コンテナに入る
 
 ```bash
-docker compose exec dotfiles bash
+# "dev"の部分はdocker-compose.ymlのサービス名に変更する
+docker compose exec dev bash
 ```
 
 ### 停止
