@@ -4,10 +4,12 @@ services:
       context: .
       dockerfile: dockerfile
       args:
-        USERNAME: user
-    container_name: dotfiles-dev
+        USERNAME: user # ユーザ名
+    container_name: dotfiles-dev # コンテナ名
     volumes:
       - .:/home/${USERNAME}/dotfiles
+
+      # ホスト機より.sshファイルを取得
       - ~/.ssh:/home/${USERNAME}/.ssh:ro
     environment:
       - TERM=xterm-256color
