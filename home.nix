@@ -2,7 +2,7 @@
 
 {
   home.username = username;
-  home.homeDirectory = "/home/${username}";
+  home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
 
   home.packages = [
     
