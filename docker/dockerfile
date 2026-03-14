@@ -16,11 +16,12 @@ ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
-# ubuntu ユーザーにsudo権限を付与
-RUN echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
+ARG USERNAME=user
 
-USER ubuntu
-WORKDIR /home/ubuntu
-ENV USER=ubuntu
+# ユーザーを作成してsudo権限を付与
+RUN useradd -m -s /bin/bash ${USERNAME} \
+    && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
-CMD ["bash"]
+USER ${USERNAME}
+WORKDIR /home/${USERNAME}
+ENV USER=${USERNAME}
