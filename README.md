@@ -31,7 +31,7 @@ git clone https://github.com/bikkyue/dotfiles.git \
 
 ホスト機を汚したくないので、用意したdockerコンテナを使用して作業をする想定
 
-`Docker/` ディレクトリで以下のコマンドを実行する。
+`docker/` ディレクトリで以下のコマンドを実行する。
 
 ### 起動
 
