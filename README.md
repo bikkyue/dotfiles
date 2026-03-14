@@ -51,4 +51,22 @@ docker compose exec dotfiles bash
 docker compose down
 ```
 
+### コンテナの確認
+
+```bash
+docker ps -a
+```
+
+### コンテナの削除
+
+```bash
+docker compose rm
+```
+
+### 停止済みコンテナ・不要ボリュームの一括削除
+
+```bash
+docker system prune --volumes
+```
+
 
