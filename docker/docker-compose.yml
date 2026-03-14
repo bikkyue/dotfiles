@@ -5,7 +5,7 @@ services:
       dockerfile: dockerfile
       args:
         USERNAME: user # ユーザ名
-    container_name: dotfiles-dev # コンテナ名
+    container_name: container # コンテナ名
     volumes:
       - .:/home/${USERNAME}/dotfiles
 
