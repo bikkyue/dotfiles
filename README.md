@@ -46,7 +46,7 @@ docker compose up -d
 docker compose exec dev bash
 ```
 
-### 停止
+### 停止・削除
 
 ```bash
 docker compose down
@@ -58,13 +58,7 @@ docker compose down
 docker ps -a
 ```
 
-### コンテナの削除
-
-```bash
-docker compose rm
-```
-
-### 停止済みコンテナ・不要ボリュームの一括削除
+### 停止済みコンテナ・不要ボリューム等の一括削除
 
 ```bash
 docker system prune --volumes
