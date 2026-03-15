@@ -27,6 +27,17 @@ git clone https://github.com/bikkyue/dotfiles.git \
 
 - tmux
 
+## Nix home-manager
+
+### home-manager 更新
+
+home-manager switch --flake . --impure
+
+ユーザ名を可変としたいため --impure を指定。
+
+
+
+
 ## Docker
 
 ホスト機を汚したくないので、用意したdockerコンテナを使用して作業をする想定
