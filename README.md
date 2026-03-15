@@ -27,19 +27,21 @@ git clone https://github.com/bikkyue/dotfiles.git \
 
 - tmux
 
-## Nix home-manager
-
-### home-manager 更新
+## Nix
 
 - flake.lockに記載のinputを最新化
-
+    ```bash
     nix flake update
+    ```
 
 - flake.lockの変更を反映
 
-    home-manager switch --flake . --impure
+  ユーザ名を可変としたいため --impure を指定。
 
-    ユーザ名を可変としたいため --impure を指定。
+    ```bash
+    home-manager switch --flake . --impure
+    ```
+        
 
 
 
