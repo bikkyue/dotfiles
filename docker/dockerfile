@@ -22,6 +22,10 @@ ARG USERNAME=user
 RUN useradd -m -s /bin/bash ${USERNAME} \
     && echo "${USERNAME} ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 
+COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+
 USER ${USERNAME}
 WORKDIR /home/${USERNAME}
 ENV USER=${USERNAME}
+
+ENTRYPOINT ["entrypoint.sh"]
