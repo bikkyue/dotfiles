@@ -16,12 +16,23 @@ install_nix() {
         return
     fi
 
-    echo "[install] Installing Nix (single-user mode)..."
-    curl -L https://nixos.org/nix/install | sh -s -- --no-daemon
-
-    # 現在のシェルにNixのパスを反映
-    # shellcheck source=/dev/null
-    . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+    case "$(uname -s)" in #macOSの場合はデーモンモードでのインストールを行う。
+        Darwin)
+            echo "[install] Installing Nix (daemon mode for macOS)..."
+            curl -L https://nixos.org/nix/install | sh -s -- --daemon
+            # デーモンモードのプロファイル読み込み
+            # shellcheck source=/dev/null
+            if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
+                . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
+            fi
+            ;;
+        *)
+            echo "[install] Installing Nix (single-user mode)..."
+            curl -L https://nixos.org/nix/install | sh -s -- --no-daemon
+            # shellcheck source=/dev/null
+            . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+            ;;
+    esac
 
     echo "[done] Nix installed successfully."
 }
