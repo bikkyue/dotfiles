@@ -31,9 +31,15 @@ git clone https://github.com/bikkyue/dotfiles.git \
 
 ### home-manager 更新
 
-home-manager switch --flake . --impure
+- flake.lockに記載のinputを最新化
 
-ユーザ名を可変としたいため --impure を指定。
+    nix flake update
+
+- flake.lockの変更を反映
+
+    home-manager switch --flake . --impure
+
+    ユーザ名を可変としたいため --impure を指定。
 
 
 
