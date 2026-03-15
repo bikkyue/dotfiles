@@ -25,6 +25,10 @@ git clone https://github.com/bikkyue/dotfiles.git \
     zsh用のプロンプト
     テーマは[Pure Preset](https://starship.rs/presets/pure-preset)を使用 
 
+- fzf
+
+    コマンドライン用のファジー検索ツール
+
 - tmux
 
 ## Nix
