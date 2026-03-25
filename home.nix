@@ -25,7 +25,10 @@
     # .zshenv に書くことで、全セッションで確実に読み込まれる
     envExtra = ''
       # Nix インストーラーは bash の設定しか更新しないため、zsh 用に明示的に読み込む
-      if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+      # macOS (daemon mode) と Linux (single-user mode) でパスが異なる
+      if [ -f "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
+        . "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+      elif [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
         . "$HOME/.nix-profile/etc/profile.d/nix.sh"
       fi
     '';
