@@ -22,10 +22,9 @@
   # zsh
   programs.zsh = {
     enable = true;
-    # .zshenv に書くことで、全セッションで確実に読み込まれる
+    # .zshenv に書いておくと全セッションで読み込まれる
     envExtra = ''
-      # Nix インストーラーは bash の設定しか更新しないため、zsh 用に明示的に読み込む
-      # macOS (daemon mode) と Linux (single-user mode) でパスが異なる
+      # macOS と Linux でパスが違う
       if [ -f "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
         . "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
       elif [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
@@ -33,7 +32,6 @@
       fi
     '';
     initExtra = ''
-      # Home Manager が管理するパッケージへのパス
       export PATH="$HOME/.local/state/home-manager/gcroots/current-home/home-path/bin:$PATH"
     '';
   };
