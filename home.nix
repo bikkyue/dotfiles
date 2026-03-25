@@ -22,10 +22,9 @@
   # zsh
   programs.zsh = {
     enable = true;
-    # .zshenv に書くことで全zshセッション（非インタラクティブ含む）で読み込まれる
+    # .zshenv に書くことで、全セッションで確実に読み込まれる
     envExtra = ''
-      # Nix プロファイルの初期化（再起動後もパスを維持するため）
-      # Nix インストーラーは bash の設定のみ更新するため、zsh 用に明示的に読み込む
+      # Nix インストーラーは bash の設定しか更新しないため、zsh 用に明示的に読み込む
       if [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
         . "$HOME/.nix-profile/etc/profile.d/nix.sh"
       fi
