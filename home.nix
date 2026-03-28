@@ -14,6 +14,13 @@
 
   home.sessionPath = [ "$HOME/.npm-global/bin" ];
 
+  # git
+  programs.git = {
+    enable = true;
+    userName = "bikkyue";
+    userEmail = "121682296+bikkyue@users.noreply.github.com";
+  };
+
   # LazyVim
   programs.lazyvim = {
     enable = true;
