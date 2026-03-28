@@ -5,8 +5,21 @@
   home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
 
   home.packages = [
-    
+    pkgs.nodejs
   ];
+
+  home.sessionVariables = {
+    NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+  };
+
+  home.sessionPath = [ "$HOME/.npm-global/bin" ];
+
+  # git
+  programs.git = {
+    enable = true;
+    userName = "bikkyue";
+    userEmail = "121682296+bikkyue@users.noreply.github.com";
+  };
 
   # LazyVim
   programs.lazyvim = {
@@ -22,8 +35,16 @@
   # zsh
   programs.zsh = {
     enable = true;
+    # .zshenv に書いておくと全セッションで読み込まれる
+    envExtra = ''
+      # macOS と Linux でパスが違う
+      if [ -f "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
+        . "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+      elif [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+        . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+      fi
+    '';
     initExtra = ''
-      # Home Manager が管理するパッケージへのパス
       export PATH="$HOME/.local/state/home-manager/gcroots/current-home/home-path/bin:$PATH"
     '';
   };
