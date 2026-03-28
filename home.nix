@@ -5,8 +5,14 @@
   home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
 
   home.packages = [
-    
+    pkgs.nodejs
   ];
+
+  home.sessionVariables = {
+    NPM_CONFIG_PREFIX = "$HOME/.npm-global";
+  };
+
+  home.sessionPath = [ "$HOME/.npm-global/bin" ];
 
   # LazyVim
   programs.lazyvim = {
