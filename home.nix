@@ -6,6 +6,7 @@
 
   home.packages = [
     pkgs.nodejs
+    pkgs.vim
   ];
 
   home.sessionVariables = {
