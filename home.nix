@@ -6,8 +6,18 @@
 
   home.packages = [
     pkgs.nodejs
-    pkgs.vim
   ];
+
+  # neovim
+  programs.neovim = {
+    enable = true;
+    initLua = builtins.readFile ./nvim/init.lua;
+  };
+
+  xdg.configFile."nvim/lua" = {
+    source = ./nvim/lua;
+    recursive = true;
+  };
 
   home.sessionVariables = {
     NPM_CONFIG_PREFIX = "$HOME/.npm-global";
@@ -20,11 +30,6 @@
     enable = true;
     userName = "bikkyue";
     userEmail = "121682296+bikkyue@users.noreply.github.com";
-  };
-
-  # LazyVim
-  programs.lazyvim = {
-    enable = true;
   };
 
   # bashで入った際にzshへ切り替える。
