@@ -5,7 +5,12 @@
   home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
 
   home.packages = [
-    pkgs.nodejs
+    pkgs.nodejs       # JavaScript / TypeScript / Astro
+    pkgs.cargo        # Rust
+    pkgs.rustc        # Rust
+    pkgs.python3      # Python
+    # pkgs.jdk21        # Java
+    # pkgs.dotnet-sdk   # C#
   ];
 
   # neovim
