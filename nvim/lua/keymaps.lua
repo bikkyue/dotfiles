@@ -5,3 +5,6 @@ vim.keymap.set('n', '<leader>fh', function() require('telescope.builtin').help_t
 
 -- nvim-tree
 vim.keymap.set("n", "<C-n>", "<cmd>NvimTreeToggle<cr>", { desc = "Toggle NvimTree" })
+
+-- insertモード時、jkでノーマルモードへ
+vim.keymap.set("i", "jk", "<Esc>")
