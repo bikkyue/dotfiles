@@ -12,6 +12,10 @@ return {
         'javascript',
         'typescript',
         'astro',
+        'markdown',
+        'markdown_inline',
+        'html',
+        'css',
       },
     }
   end,

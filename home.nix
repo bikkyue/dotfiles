@@ -9,6 +9,8 @@
     pkgs.cargo        # Rust
     pkgs.rustc        # Rust
     pkgs.python3      # Python
+    pkgs.tree-sitter  # tree-sitter CLI (nvim-treesitter用)
+    pkgs.gcc          # C compiler (nvim-treesitter パーサビルド用)
     # pkgs.jdk21        # Java
     # pkgs.dotnet-sdk   # C#
   ];

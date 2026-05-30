@@ -15,3 +15,6 @@ opt.smartcase = true
 
 -- クリップボード
 vim.opt.clipboard = "unnamedplus"
+
+-- 背景を透明にする
+vim.cmd("highlight Normal ctermbg=NONE guibg=NONE")
