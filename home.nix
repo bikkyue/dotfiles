@@ -5,6 +5,7 @@
   home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
 
   home.packages = [
+    pkgs.ripgrep      # nvim上でgrep
     pkgs.nodejs       # JavaScript / TypeScript / Astro
     pkgs.cargo        # Rust
     pkgs.rustc        # Rust
@@ -67,7 +68,6 @@
     enable = true;
     enableZshIntegration = true;
     settings = {
-
       # 使用フォーマット：　https://starship.rs/presets/pure-preset 
       format = "$username$hostname$directory$git_branch$git_state$git_status$cmd_duration$line_break$python$character";
       directory.style = "blue";
