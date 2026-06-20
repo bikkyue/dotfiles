@@ -5,9 +5,27 @@
   home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
 
   home.packages = [
-    pkgs.nodejs
-    pkgs.vim
+    pkgs.ripgrep      # nvim上でgrep
+    pkgs.nodejs       # JavaScript / TypeScript / Astro
+    pkgs.cargo        # Rust
+    pkgs.rustc        # Rust
+    pkgs.python3      # Python
+    pkgs.tree-sitter  # tree-sitter CLI (nvim-treesitter用)
+    pkgs.gcc          # C compiler (nvim-treesitter パーサビルド用)
+    # pkgs.jdk21        # Java
+    # pkgs.dotnet-sdk   # C#
   ];
+
+  # neovim
+  programs.neovim = {
+    enable = true;
+    initLua = builtins.readFile ./nvim/init.lua;
+  };
+
+  xdg.configFile."nvim/lua" = {
+    source = ./nvim/lua;
+    recursive = true;
+  };
 
   home.sessionVariables = {
     NPM_CONFIG_PREFIX = "$HOME/.npm-global";
@@ -20,11 +38,6 @@
     enable = true;
     userName = "bikkyue";
     userEmail = "121682296+bikkyue@users.noreply.github.com";
-  };
-
-  # LazyVim
-  programs.lazyvim = {
-    enable = true;
   };
 
   # bashで入った際にzshへ切り替える。
@@ -55,7 +68,6 @@
     enable = true;
     enableZshIntegration = true;
     settings = {
-
       # 使用フォーマット：　https://starship.rs/presets/pure-preset 
       format = "$username$hostname$directory$git_branch$git_state$git_status$cmd_duration$line_break$python$character";
       directory.style = "blue";
