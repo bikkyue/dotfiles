@@ -14,6 +14,7 @@
     # pkgs.jdk21        # Java
     # pkgs.dotnet-sdk   # C#
     pkgs.opencode
+    pkgs.fastfetch
     (pkgs.wrangler.override { nodejs = pkgs.nodejs_22; }) # cloudflare
   ];
 
@@ -61,6 +62,7 @@
     '';
     initExtra = ''
       export PATH="$HOME/.local/state/home-manager/gcroots/current-home/home-path/bin:$PATH"
+      fastfetch
     '';
   };
 
@@ -119,6 +121,8 @@
 
   # Home Manager のバージョン
   home.stateVersion = "24.11";
+
+  programs.neovim.withRuby = false;
 
   programs.home-manager.enable = true;
 }
