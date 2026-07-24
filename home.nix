@@ -5,15 +5,16 @@
   home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
 
   home.packages = [
-    pkgs.ripgrep      # nvim上でgrep
-    pkgs.nodejs       # JavaScript / TypeScript / Astro
+    pkgs.ripgrep      # grep
+    pkgs.nodejs       # JavaScript / TypeScript
     pkgs.cargo        # Rust
     pkgs.rustc        # Rust
-    pkgs.python3      # Python
     pkgs.tree-sitter  # tree-sitter CLI (nvim-treesitter用)
     pkgs.gcc          # C compiler (nvim-treesitter パーサビルド用)
     # pkgs.jdk21        # Java
     # pkgs.dotnet-sdk   # C#
+    pkgs.opencode
+    (pkgs.wrangler.override { nodejs = pkgs.nodejs_22; }) # cloudflare
   ];
 
   # neovim
@@ -121,4 +122,3 @@
 
   programs.home-manager.enable = true;
 }
-
