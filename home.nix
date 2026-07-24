@@ -125,6 +125,7 @@
   home.stateVersion = "24.11";
 
   programs.neovim.withRuby = false;
+  programs.neovim.withPython3 = false;
 
   programs.home-manager.enable = true;
 }
