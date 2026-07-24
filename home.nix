@@ -38,8 +38,10 @@
   # git
   programs.git = {
     enable = true;
-    userName = "bikkyue";
-    userEmail = "121682296+bikkyue@users.noreply.github.com";
+    settings.user = {
+      name = "bikkyue";
+      email = "121682296+bikkyue@users.noreply.github.com";
+    };
   };
 
   # bashで入った際にzshへ切り替える。
@@ -60,7 +62,7 @@
         . "$HOME/.nix-profile/etc/profile.d/nix.sh"
       fi
     '';
-    initExtra = ''
+    initContent = ''
       export PATH="$HOME/.local/state/home-manager/gcroots/current-home/home-path/bin:$PATH"
       fastfetch
     '';
