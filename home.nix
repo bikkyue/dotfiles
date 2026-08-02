@@ -1,21 +1,22 @@
-{ config, pkgs, username, ... }:
+{ pkgs, username, ... }:
 
 {
   home.username = username;
   home.homeDirectory = if pkgs.stdenv.isDarwin then "/Users/${username}" else "/home/${username}";
 
   home.packages = [
-    pkgs.ripgrep      # grep
-    pkgs.nodejs       # JavaScript / TypeScript
-    pkgs.cargo        # Rust
-    pkgs.rustc        # Rust
-    pkgs.tree-sitter  # tree-sitter CLI (nvim-treesitter用)
-    pkgs.gcc          # C compiler (nvim-treesitter パーサビルド用)
+    pkgs.ripgrep # grep
+    pkgs.nodejs # JavaScript / TypeScript
+    pkgs.cargo # Rust
+    pkgs.rustc # Rust
+    pkgs.tree-sitter # tree-sitter CLI (nvim-treesitter用)
+    pkgs.gcc # C compiler (nvim-treesitter パーサビルド用)
     # pkgs.jdk21        # Java
     # pkgs.dotnet-sdk   # C#
     pkgs.opencode
     pkgs.fastfetch
     (pkgs.wrangler.override { nodejs = pkgs.nodejs_22; }) # cloudflare
+    pkgs.cloudflared
   ];
 
   # neovim
@@ -44,12 +45,6 @@
     };
   };
 
-  # bashで入った際にzshへ切り替える。
-  programs.bash = {
-    enable = true;
-    initExtra = "exec ${pkgs.zsh}/bin/zsh";
-  };
-
   # zsh
   programs.zsh = {
     enable = true;
@@ -63,7 +58,6 @@
       fi
     '';
     initContent = ''
-      export PATH="$HOME/.local/state/home-manager/gcroots/current-home/home-path/bin:$PATH"
       fastfetch
     '';
   };
@@ -73,7 +67,7 @@
     enable = true;
     enableZshIntegration = true;
     settings = {
-      # 使用フォーマット：　https://starship.rs/presets/pure-preset 
+      # 使用フォーマット：　https://starship.rs/presets/pure-preset
       format = "$username$hostname$directory$git_branch$git_state$git_status$cmd_duration$line_break$python$character";
       directory.style = "blue";
       character = {
@@ -101,8 +95,8 @@
       python = {
         format = "[$virtualenv]($style) ";
         style = "bright-black";
-        detect_extensions = [];
-        detect_files = [];
+        detect_extensions = [ ];
+        detect_files = [ ];
       };
     };
   };

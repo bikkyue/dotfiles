@@ -1,14 +1,9 @@
-# ============================================
-# install.sh - Dotfiles セットアップスクリプト
-# ============================================
+#!/usr/bin/env bash
 
 set -euo pipefail
+
 DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
-
-
-# --------------------
-# Nix インストール
-# --------------------
+USERNAME="bikkyue"
 
 install_nix() {
     if command -v nix &> /dev/null; then
@@ -16,77 +11,91 @@ install_nix() {
         return
     fi
 
-    case "$(uname -s)" in #macOSの場合はデーモンモードでのインストールを行う。
+    case "$(uname -s)" in
         Darwin)
-            echo "[install] Installing Nix (daemon mode for macOS)..."
+            echo "[install] Installing Nix in daemon mode..."
             curl -L https://nixos.org/nix/install | sh -s -- --daemon
-            # デーモンモードのプロファイル読み込み
             # shellcheck source=/dev/null
-            if [ -f /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh ]; then
-                . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
-            fi
+            . /nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh
             ;;
         *)
-            echo "[install] Installing Nix (single-user mode)..."
+            echo "[install] Installing Nix in single-user mode..."
             curl -L https://nixos.org/nix/install | sh -s -- --no-daemon
             # shellcheck source=/dev/null
             . "$HOME/.nix-profile/etc/profile.d/nix.sh"
             ;;
     esac
-
-    echo "[done] Nix installed successfully."
 }
-
-
-# --------------------
-# Nix Flakes 有効化
-# --------------------
 
 enable_flakes() {
     local nix_conf="$HOME/.config/nix/nix.conf"
 
     if [ -f "$nix_conf" ] && grep -q "experimental-features" "$nix_conf"; then
-        echo "[skip] Flakes already enabled."
+        echo "[skip] Flakes are already enabled."
         return
     fi
 
     echo "[setup] Enabling Nix flakes..."
     mkdir -p "$(dirname "$nix_conf")"
     echo "experimental-features = nix-command flakes" >> "$nix_conf"
-    echo "[done] Flakes enabled."
 }
 
+apply_nixos() {
+    if [ "$(hostname)" != "Shironere" ]; then
+        echo "[error] The NixOS configuration is only defined for Shironere." >&2
+        exit 1
+    fi
 
-# --------------------
-# Home Manager 適用
-# --------------------
+    if ! sudo test -f /var/lib/cloudflared/token; then
+        echo "[error] Restore /var/lib/cloudflared/token before rebuilding NixOS." >&2
+        exit 1
+    fi
+
+    echo "[install] Applying the Shironere NixOS configuration..."
+    sudo nixos-rebuild switch \
+        --flake "path:${DOTFILES_DIR}#Shironere" \
+        --option experimental-features "nix-command flakes"
+}
 
 apply_home_manager() {
-    local current_user
-    current_user="$(whoami)"
+    local target
 
-    echo "[install] Applying Home Manager configuration for ${current_user}..."
-    export PATH="$HOME/.nix-profile/bin:$HOME/.local/state/home-manager/gcroots/current-home/home-path/bin:$PATH"
-    export USER="${current_user}"
-    nix run home-manager/master -- switch --flake "${DOTFILES_DIR}#${current_user}" --impure -b backup
-    echo "[done] Home Manager applied successfully."
+    if [ "$(whoami)" != "$USERNAME" ]; then
+        echo "[error] Home Manager is configured for ${USERNAME}." >&2
+        exit 1
+    fi
+
+    case "$(uname -s)" in
+        Darwin) target="${USERNAME}@macos" ;;
+        Linux) target="${USERNAME}@linux" ;;
+        *)
+            echo "[error] Unsupported operating system: $(uname -s)" >&2
+            exit 1
+            ;;
+    esac
+
+    echo "[install] Applying Home Manager configuration ${target}..."
+    nix run home-manager/master -- switch \
+        --flake "path:${DOTFILES_DIR}#${target}" \
+        -b backup
 }
 
-
-# main
 main() {
     echo "=== Dotfiles Setup ==="
-    install_nix
-    enable_flakes
-    apply_home_manager
+
+    if [ -e /etc/NIXOS ]; then
+        apply_nixos
+    else
+        install_nix
+        enable_flakes
+        apply_home_manager
+    fi
+
     echo "=== Setup Complete ==="
-    
-    # セットアップ完了後、zsh に切り替え
+
     if command -v zsh &> /dev/null; then
-        echo "[info] Switching to zsh..."
         exec zsh
     fi
 }
 
 main "$@"
-
