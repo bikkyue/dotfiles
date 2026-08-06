@@ -46,11 +46,15 @@
       noto-fonts-cjk-sans
       noto-fonts-cjk-serif
       noto-fonts-color-emoji
+      nerd-fonts.noto
     ];
     fontconfig.defaultFonts = {
       sansSerif = [ "Noto Sans CJK JP" ];
       serif = [ "Noto Serif CJK JP" ];
-      monospace = [ "Noto Sans Mono CJK JP" ];
+      monospace = [
+        "NotoSansM Nerd Font Mono"
+        "Noto Sans Mono CJK JP"
+      ];
       emoji = [ "Noto Color Emoji" ];
     };
   };
