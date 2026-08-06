@@ -48,7 +48,7 @@ cd dotfiles
 
 ### NixOS
 
-`HOST`には`Atarayo`または`Shironere`を指定します。
+`HOST`には`Atarayo`または`Shironere`を指定する。
 
 ```bash
 sudo nixos-rebuild switch --flake ".#<hostname>" --impure
@@ -56,13 +56,13 @@ sudo nixos-rebuild switch --flake ".#<hostname>" --impure
 
 ### NixOS以外
 
-初回セットアップはmacOSとLinuxで共通です。
+初回セットアップはmacOSとLinuxで共通
 
 ```bash
 bash install.sh
 ```
 
-以後はHome Managerを直接更新できます。
+以後はHome Managerを直接更新する。
 
 ```bash
 home-manager switch --flake . --impure
@@ -93,4 +93,4 @@ home-manager switch --flake . --impure
 nix flake update
 ```
 
-更新後は、使用しているOSの適用コマンドを再実行します。
+更新後は、使用しているOSの適用コマンドを再実行する。
