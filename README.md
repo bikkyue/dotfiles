@@ -1,6 +1,8 @@
 # dotfiles
 
-NixOSとHome Managerで管理する個人環境です。NixOSではシステムとユーザー環境を一括管理し、macOSと非NixOS LinuxではHome Managerだけを使用します。
+NixOSとHome Managerで管理する個人環境。
+NixOSではシステムとユーザー環境を一括管理し、
+macOSと非NixOS LinuxではHome Managerだけを使用する。
 
 ## 構成
 
@@ -49,11 +51,8 @@ cd dotfiles
 `HOST`には`Atarayo`または`Shironere`を指定します。
 
 ```bash
-HOST=Atarayo
-sudo nixos-rebuild switch --flake ".#${HOST}" --impure
+sudo nixos-rebuild switch --flake ".#<hostname>" --impure
 ```
-
-AtarayoではFlake外のAsahi Linuxファームウェアを参照するため`--impure`が必要です。コマンドを統一するため、Shironereでも同じオプションを使用します。
 
 ### NixOS以外
 
