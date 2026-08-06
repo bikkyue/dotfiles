@@ -1,0 +1,33 @@
+{
+  lib,
+  osConfig ? null,
+  pkgs,
+  ...
+}:
+
+{
+  programs.bash = lib.mkIf (pkgs.stdenv.isLinux && osConfig == null) {
+    enable = true;
+    initExtra = ''
+      if [[ $- == *i* ]]; then
+        exec ${pkgs.zsh}/bin/zsh
+      fi
+    '';
+  };
+
+  programs.zsh = {
+    enable = true;
+    # .zshenv に書いておくと全セッションで読み込まれる
+    envExtra = ''
+      # macOS と Linux でパスが違う
+      if [ -f "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ]; then
+        . "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+      elif [ -f "$HOME/.nix-profile/etc/profile.d/nix.sh" ]; then
+        . "$HOME/.nix-profile/etc/profile.d/nix.sh"
+      fi
+    '';
+    initContent = ''
+      fastfetch
+    '';
+  };
+}

@@ -1,49 +1,96 @@
 # dotfiles
 
-## セットアップ手順
+NixOSとHome Managerで管理する個人環境。
+NixOSではシステムとユーザー環境を一括管理し、
+macOSと非NixOS LinuxではHome Managerだけを使用する。
 
+## 構成
+
+```text
+.
+├── flake.nix
+├── home.nix
+├── install.sh
+├── modules/
+│   ├── fzf.nix
+│   ├── neovim.nix
+│   ├── starship.nix
+│   ├── tmux.nix
+│   └── zsh.nix
+├── neovim/
+│   ├── init.lua
+│   └── lua/
+└── nixos/
+    ├── common-configuration.nix
+    ├── Atarayo/
+    │   ├── configuration.nix
+    │   └── hardware-configuration.nix
+    └── Shironere/
+        ├── configuration.nix
+        └── hardware-configuration.nix
 ```
-git clone https://github.com/bikkyue/dotfiles.git \
-&& cd dotfiles \
-&& bash install.sh
+
+- `flake.nix`: NixOSとHome Managerの出力、依存バージョン
+- `home.nix`: 全OSで共有するHome Manager設定
+- `install.sh`: OSを判定して適切なHome ManagerまたはNixOS設定を適用
+- `modules/`: アプリケーションごとのHome Manager module
+- `neovim/`: NeovimのLua設定
+- `nixos/common-configuration.nix`: ユーザー、SSH、NetworkManager、Avahi、Notoフォントなどの共通設定
+- `nixos/Atarayo`: Apple Siliconマシン固有の設定
+- `nixos/Shironere`: x86_64マシン固有の設定
+
+## セットアップ
+
+```bash
+git clone https://github.com/bikkyue/dotfiles.git
+cd dotfiles
 ```
 
-## ディレクトリ構成
+### NixOS
 
-## パッケージ
+`HOST`には`Atarayo`または`Shironere`を指定する。
+
+```bash
+sudo nixos-rebuild switch --flake ".#<hostname>" --impure
+```
+
+### NixOS以外
+
+初回セットアップはmacOSとLinuxで共通
+
+```bash
+bash install.sh
+```
+
+以後はHome Managerを直接更新する。
+
+```bash
+home-manager switch --flake . --impure
+```
+
+## 主なパッケージ
 
 - zsh
-
-- git
-
-- Neovim
-    
-    - lazy.vim
-
-- starship
-
-    zsh用のプロンプト
-    テーマは[Pure Preset](https://starship.rs/presets/pure-preset)を使用 
-
+- Git
+- Vim
+- Neovimとlazy.nvim
+- Starship
 - fzf
-
-    コマンドライン用のファジー検索ツール
-
 - tmux
+- Fastfetch
+- ripgrep（Neovim）
+- Node.js
+- tree-sitterとGCC
+- OpenCode
+- Claude Code
+- Wrangler
+- Cloudflared
+- Noto CJKとNoto Color Emoji（NixOS）
 
-## Nix
+## Flake更新
 
-- flake.lockに記載のinputを最新化
-    ```bash
-    nix flake update
-    ```
+```bash
+nix flake update
+```
 
-- flake.lockの変更を反映
-
-  ユーザ名を可変としたいため --impure を指定。
-
-    ```bash
-    home-manager switch --flake . --impure
-    ```
-        
-
+更新後は、使用しているOSの適用コマンドを再実行する。
