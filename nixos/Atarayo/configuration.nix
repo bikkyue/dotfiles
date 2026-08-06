@@ -8,6 +8,10 @@
 
   hardware.asahi.enable = true;
   hardware.asahi.peripheralFirmwareDirectory = /firmware;
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+  };
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = false;
