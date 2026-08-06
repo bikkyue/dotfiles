@@ -1,6 +1,20 @@
-{ ... }:
+{
+  lib,
+  osConfig ? null,
+  pkgs,
+  ...
+}:
 
 {
+  programs.bash = lib.mkIf (pkgs.stdenv.isLinux && osConfig == null) {
+    enable = true;
+    initExtra = ''
+      if [[ $- == *i* ]]; then
+        exec ${pkgs.zsh}/bin/zsh
+      fi
+    '';
+  };
+
   programs.zsh = {
     enable = true;
     # .zshenv に書いておくと全セッションで読み込まれる

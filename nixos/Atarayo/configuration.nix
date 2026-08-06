@@ -17,8 +17,6 @@
   networking.hostName = "Atarayo";
   time.timeZone = "Asia/Tokyo";
 
-  services.openssh.openFirewall = true;
-
   environment.systemPackages = with pkgs; [
     vim
     git

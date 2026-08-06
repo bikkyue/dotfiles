@@ -78,7 +78,7 @@ home-manager switch --flake . --impure
 - fzf
 - tmux
 - Fastfetch
-- ripgrep
+- ripgrep（Neovim）
 - Node.js
 - tree-sitterとGCC
 - OpenCode
