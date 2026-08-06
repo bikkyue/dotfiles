@@ -7,10 +7,10 @@ return {
   config = function()
     require('mason-lspconfig').setup {
       ensure_installed = {
-        'rust_analyzer', -- Rust
-        'pyright', -- python
+        -- 'rust_analyzer', -- Rust
+        -- 'pyright', -- python
         'ts_ls', -- TypeScript
-        'astro', -- Astro
+        -- 'astro', -- Astro
         -- 'jdtls', -- Java
         -- 'omnisharp', -- C#
         'marksman', -- Markdown

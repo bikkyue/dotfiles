@@ -3,11 +3,7 @@
 {
   imports = [
     ./hardware-configuration.nix
-  ];
-
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
+    ../common-configuration.nix
   ];
 
   boot = {
@@ -24,32 +20,10 @@
 
   networking = {
     hostName = "Shironere";
-    networkmanager.enable = true;
     firewall.allowedTCPPorts = [ 2283 ];
   };
 
-  users.users.bikkyue = {
-    isNormalUser = true;
-    shell = pkgs.zsh;
-    extraGroups = [
-      "wheel"
-      "networkmanager"
-      "docker"
-    ];
-    openssh.authorizedKeys.keys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINSlm7kxHVoyzo2d1Sq33GoUIT98Wjf7WP9Viqd6Aru5"
-    ];
-  };
-
-  programs.zsh.enable = true;
-
-  services.openssh = {
-    enable = true;
-    settings = {
-      PasswordAuthentication = false;
-      PermitRootLogin = "no";
-    };
-  };
+  users.users.bikkyue.extraGroups = [ "docker" ];
 
   services.samba = {
     enable = true;

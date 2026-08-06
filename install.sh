@@ -41,42 +41,49 @@ enable_flakes() {
 }
 
 apply_nixos() {
-    if [ "$(hostname)" != "Shironere" ]; then
-        echo "[error] The NixOS configuration is only defined for Shironere." >&2
-        exit 1
-    fi
+    local target
 
-    if ! sudo test -f /var/lib/cloudflared/token; then
-        echo "[error] Restore /var/lib/cloudflared/token before rebuilding NixOS." >&2
-        exit 1
-    fi
+    case "$(hostname)" in
+        Shironere)
+            target="Shironere"
+            if ! sudo test -f /var/lib/cloudflared/token; then
+                echo "[error] Restore /var/lib/cloudflared/token before rebuilding NixOS." >&2
+                exit 1
+            fi
+            ;;
+        Atarayo|atarayo|Geppaku)
+            target="Atarayo"
+            ;;
+        *)
+            echo "[error] No NixOS configuration is defined for $(hostname)." >&2
+            exit 1
+            ;;
+    esac
 
-    echo "[install] Applying the Shironere NixOS configuration..."
+    echo "[install] Applying the ${target} NixOS configuration..."
     sudo nixos-rebuild switch \
-        --flake "path:${DOTFILES_DIR}#Shironere" \
-        --option experimental-features "nix-command flakes"
+        --flake "path:${DOTFILES_DIR}#${target}" \
+        --impure
 }
 
 apply_home_manager() {
-    local target
-
     if [ "$(whoami)" != "$USERNAME" ]; then
         echo "[error] Home Manager is configured for ${USERNAME}." >&2
         exit 1
     fi
 
     case "$(uname -s)" in
-        Darwin) target="${USERNAME}@macos" ;;
-        Linux) target="${USERNAME}@linux" ;;
+        Darwin|Linux) ;;
         *)
             echo "[error] Unsupported operating system: $(uname -s)" >&2
             exit 1
             ;;
     esac
 
-    echo "[install] Applying Home Manager configuration ${target}..."
+    echo "[install] Applying Home Manager configuration ${USERNAME}..."
     nix run home-manager/master -- switch \
-        --flake "path:${DOTFILES_DIR}#${target}" \
+        --flake "path:${DOTFILES_DIR}" \
+        --impure \
         -b backup
 }
 

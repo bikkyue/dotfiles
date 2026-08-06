@@ -1,6 +1,6 @@
 # dotfiles
 
-NixOSとHome Managerで管理する個人環境です。
+NixOSとHome Managerで管理する個人環境です。NixOSではシステムとユーザー環境を一括管理し、macOSと非NixOS LinuxではHome Managerだけを使用します。
 
 ## 構成
 
@@ -8,106 +8,90 @@ NixOSとHome Managerで管理する個人環境です。
 .
 ├── flake.nix
 ├── home.nix
-├── hosts/
-│   └── Shironere/
-│       ├── configuration.nix
-│       └── hardware-configuration.nix
 ├── install.sh
-└── nvim/
+├── modules/
+│   ├── fzf.nix
+│   ├── neovim.nix
+│   ├── starship.nix
+│   ├── tmux.nix
+│   └── zsh.nix
+├── neovim/
+│   ├── init.lua
+│   └── lua/
+└── nixos/
+    ├── common-configuration.nix
+    ├── Atarayo/
+    │   ├── configuration.nix
+    │   └── hardware-configuration.nix
+    └── Shironere/
+        ├── configuration.nix
+        └── hardware-configuration.nix
 ```
 
-- `hosts/Shironere`: Shironere固有のNixOS設定
-- `home.nix`: macOS、NixOS、非NixOS Linuxで共有するユーザー設定
-- `flake.nix`: NixOSとHome Managerの出力および依存バージョン
+- `flake.nix`: NixOSとHome Managerの出力、依存バージョン
+- `home.nix`: 全OSで共有するHome Manager設定
+- `install.sh`: OSを判定して適切なHome ManagerまたはNixOS設定を適用
+- `modules/`: アプリケーションごとのHome Manager module
+- `neovim/`: NeovimのLua設定
+- `nixos/common-configuration.nix`: ユーザー、SSH、NetworkManager、Avahi、Notoフォントなどの共通設定
+- `nixos/Atarayo`: Apple Siliconマシン固有の設定
+- `nixos/Shironere`: x86_64マシン固有の設定
 
 ## セットアップ
 
 ```bash
 git clone https://github.com/bikkyue/dotfiles.git
 cd dotfiles
+```
+
+### NixOS
+
+`HOST`には`Atarayo`または`Shironere`を指定します。
+
+```bash
+HOST=Atarayo
+sudo nixos-rebuild switch --flake ".#${HOST}" --impure
+```
+
+AtarayoではFlake外のAsahi Linuxファームウェアを参照するため`--impure`が必要です。コマンドを統一するため、Shironereでも同じオプションを使用します。
+
+### NixOS以外
+
+初回セットアップはmacOSとLinuxで共通です。
+
+```bash
 bash install.sh
 ```
 
-ShironereではNixOSとHome Managerを一括適用します。macOSと非NixOS LinuxではHome Managerだけを適用します。
-
-## Shironere
-
-Cloudflare TunnelトークンはGitで管理しません。NixOSを適用する前に、次のファイルをroot所有、モード`600`で用意します。
-
-```text
-/var/lib/cloudflared/token
-```
-
-現在動作中のサービス資格情報から復旧する場合は、サービスを停止・再起動する前に実行します。
+以後はHome Managerを直接更新できます。
 
 ```bash
-sudo install -D -m 600 -o root -g root \
-  /run/credentials/cloudflared.service/tunnel-token \
-  /var/lib/cloudflared/token
+home-manager switch --flake . --impure
 ```
 
-最初にビルドだけを確認します。
-
-```bash
-sudo nixos-rebuild build \
-  --flake .#Shironere \
-  --option experimental-features "nix-command flakes"
-```
-
-一時適用後、別の端末からSSHで再接続できることを確認します。
-
-```bash
-sudo nixos-rebuild test \
-  --flake .#Shironere \
-  --option experimental-features "nix-command flakes"
-```
-
-問題がなければ永続化します。
-
-```bash
-sudo nixos-rebuild switch --flake .#Shironere
-```
-
-以後はこのコマンドでNixOSとHome Managerの両方が更新されます。
-
-## macOS
-
-```bash
-nix run home-manager/master -- switch \
-  --flake '.#bikkyue@macos' \
-  -b backup
-```
-
-## 非NixOS Linux
-
-```bash
-nix run home-manager/master -- switch \
-  --flake '.#bikkyue@linux' \
-  -b backup
-```
-
-## パッケージ
+## 主なパッケージ
 
 - zsh
 - Git
+- Vim
 - Neovimとlazy.nvim
 - Starship
 - fzf
 - tmux
+- Fastfetch
 - ripgrep
 - Node.js
-- Rust
+- tree-sitterとGCC
 - OpenCode
 - Claude Code
 - Wrangler
 - Cloudflared
+- Noto CJKとNoto Color Emoji（NixOS）
 
-## 更新
-
-flake inputを更新します。
+## Flake更新
 
 ```bash
 nix flake update
 ```
 
-Shironereでは更新後にビルドと一時適用を確認してから永続化します。
+更新後は、使用しているOSの適用コマンドを再実行します。
