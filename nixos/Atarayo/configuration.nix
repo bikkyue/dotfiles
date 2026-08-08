@@ -94,7 +94,7 @@
 
     binds {
         Mod+Shift+Slash { show-hotkey-overlay; }
-        Mod+T { spawn "kitty"; }
+        Mod+T { spawn "alacritty"; }
         Mod+D { spawn "fuzzel"; }
         Mod+Q { close-window; }
         Mod+O repeat=false { toggle-overview; }
@@ -127,11 +127,19 @@
     }
   '';
 
+  home-manager.users.bikkyue.xdg.configFile."alacritty/alacritty.toml".text = ''
+    [font]
+    normal = { family = "NotoSansM Nerd Font Mono" }
+
+    [window]
+    opacity = 0.85
+  '';
+
   environment.systemPackages = with pkgs; [
     vim
     git
     fastfetch
-    kitty
+    alacritty
     fuzzel
     waybar
     xwayland-satellite
