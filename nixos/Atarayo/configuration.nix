@@ -46,7 +46,7 @@
       waylandFrontend = true;
       addons = with pkgs; [ fcitx5-mozc ];
       settings = {
-        globalOptions."Hotkey/TriggerKeys"."0" = "Control+space";
+        globalOptions."Hotkey/TriggerKeys"."0" = "Caps_Lock";
         inputMethod = {
           "Groups/0" = {
             Name = "Default";
