@@ -46,7 +46,6 @@
       waylandFrontend = true;
       addons = with pkgs; [ fcitx5-mozc ];
       settings = {
-        globalOptions."Hotkey/TriggerKeys"."0" = "Caps_Lock";
         inputMethod = {
           "Groups/0" = {
             Name = "Default";
@@ -94,6 +93,7 @@
     screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
     binds {
+        Caps_Lock { spawn "fcitx5-remote" "-t"; }
         Mod+Shift+Slash { show-hotkey-overlay; }
         Mod+T { spawn "alacritty"; }
         Mod+D { spawn "fuzzel"; }
