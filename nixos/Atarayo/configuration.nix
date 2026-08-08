@@ -78,12 +78,13 @@
     layout {
         gaps 12
         default-column-width { proportion 0.5; }
-        focus-ring {
-            width 3
-            active-color "#7fc8ff"
-            inactive-color "#505050"
-        }
+        focus-ring { off; }
         border { off; }
+    }
+
+    window-rule {
+        match app-id=r#"^Alacritty$"#
+        opacity 0.85
     }
 
     spawn-at-startup "waybar"
@@ -131,8 +132,6 @@
     [font]
     normal = { family = "NotoSansM Nerd Font Mono" }
 
-    [window]
-    opacity = 0.85
   '';
 
   environment.systemPackages = with pkgs; [
