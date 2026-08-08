@@ -96,6 +96,7 @@
         Caps_Lock { spawn "fcitx5-remote" "-t"; }
         Mod+Shift+Slash { show-hotkey-overlay; }
         Mod+T { spawn "alacritty"; }
+        Mod+E { spawn "cosmic-files"; }
         Mod+D { spawn "fuzzel"; }
         Mod+Q { close-window; }
         Mod+O repeat=false { toggle-overview; }
@@ -128,17 +129,64 @@
     }
   '';
 
-  home-manager.users.bikkyue.xdg.configFile."alacritty/alacritty.toml".text = ''
-    [font]
-    normal = { family = "NotoSansM Nerd Font Mono" }
+  home-manager.users.bikkyue =
+    let
+      nvimMimeTypes = [
+        "application/javascript"
+        "application/json"
+        "application/toml"
+        "application/typescript"
+        "application/x-shellscript"
+        "text/javascript"
+        "text/markdown"
+        "text/plain"
+        "text/typescript"
+        "text/x-c"
+        "text/x-c++src"
+        "text/x-java"
+        "text/x-lua"
+        "text/x-nix"
+        "text/x-python"
+        "text/x-rust"
+      ];
+    in
+    {
+      xdg.configFile."alacritty/alacritty.toml".text = ''
+        [font]
+        normal = { family = "NotoSansM Nerd Font Mono" }
 
-  '';
+      '';
+
+      xdg.desktopEntries.nvim-terminal = {
+        name = "Neovim (Alacritty)";
+        genericName = "Text Editor";
+        exec = "alacritty -e nvim %F";
+        icon = "nvim";
+        terminal = false;
+        categories = [
+          "Utility"
+          "TextEditor"
+        ];
+        mimeType = nvimMimeTypes;
+      };
+
+      xdg.mimeApps = {
+        enable = true;
+        defaultApplications = builtins.listToAttrs (
+          map (mimeType: {
+            name = mimeType;
+            value = [ "nvim-terminal.desktop" ];
+          }) nvimMimeTypes
+        );
+      };
+    };
 
   environment.systemPackages = with pkgs; [
     vim
     git
     fastfetch
     alacritty
+    cosmic-files
     fuzzel
     waybar
     xwayland-satellite
