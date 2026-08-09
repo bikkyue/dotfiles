@@ -100,6 +100,7 @@
         Mod+T { spawn "alacritty"; }
         Mod+E { spawn "cosmic-files"; }
         Mod+D { spawn "fuzzel"; }
+        Ctrl+B { spawn "firefox"; }
         Mod+Q { close-window; }
         Mod+O repeat=false { toggle-overview; }
 
