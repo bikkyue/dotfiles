@@ -27,7 +27,16 @@
   networking.hostName = "Atarayo";
   time.timeZone = "Asia/Tokyo";
 
+  users.users.bikkyue.extraGroups = [ "uinput" ];
+
   programs.niri.enable = true;
+
+  services.sunshine = {
+    enable = true;
+    autoStart = true;
+    capSysAdmin = true;
+    openFirewall = true;
+  };
 
   services.greetd = {
     enable = true;
@@ -46,6 +55,7 @@
       waylandFrontend = true;
       addons = with pkgs; [ fcitx5-mozc ];
       settings = {
+        globalOptions."Hotkey/AltTriggerKeys" = { };
         inputMethod = {
           "Groups/0" = {
             Name = "Default";
