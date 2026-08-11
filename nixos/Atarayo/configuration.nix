@@ -181,6 +181,36 @@
 
       '';
 
+      xdg.configFile."fuzzel/fuzzel.ini".text = ''
+        [main]
+        font=NotoSansM Nerd Font Mono:size=18
+        prompt=󰍉  
+        placeholder=アプリを検索...
+        lines=10
+        width=50
+        horizontal-pad=32
+        vertical-pad=24
+        inner-pad=12
+        icon-theme=Adwaita
+        layer=overlay
+
+        [colors]
+        background=14161ce6
+        text=e6e9efff
+        prompt=89b4faff
+        placeholder=6c7086ff
+        input=cdd6f4ff
+        match=f9e2afff
+        selection=89b4faff
+        selection-text=111318ff
+        selection-match=111318ff
+        border=89b4faff
+
+        [border]
+        width=2
+        radius=14
+      '';
+
       xdg.configFile."waybar/config".text = builtins.toJSON {
         position = "bottom";
         layer = "top";
@@ -199,9 +229,13 @@
           "wlr/taskbar"
         ];
         modules-right = [
+          "cpu"
+          "memory"
+          "disk"
           "custom/separator-workspaces"
           "niri/workspaces"
           "tray"
+          "wireplumber"
           "clock"
         ];
 
@@ -239,6 +273,22 @@
           format = "│";
           tooltip = false;
         };
+        cpu = {
+          format = " {usage}%";
+          tooltip = false;
+          interval = 2;
+        };
+        memory = {
+          format = " {percentage}%";
+          tooltip = false;
+          interval = 2;
+        };
+        disk = {
+          format = " {percentage_used}%";
+          tooltip = false;
+          interval = 30;
+          path = "/";
+        };
         "wlr/taskbar" = {
           format = "{icon}";
           icon-size = 24;
@@ -253,6 +303,18 @@
         tray = {
           icon-size = 18;
           spacing = 8;
+        };
+        wireplumber = {
+          format = "{icon} {volume}%";
+          format-muted = "󰖁";
+          format-icons = [
+            ""
+            ""
+            ""
+          ];
+          on-click = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+          on-scroll-up = "wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+";
+          on-scroll-down = "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-";
         };
         clock = {
           format = "{:%H:%M}";
@@ -285,9 +347,13 @@
         #custom-firefox,
         #custom-files,
         #custom-terminal,
+        #cpu,
+        #memory,
+        #disk,
         #taskbar button,
         #workspaces button,
         #tray,
+        #wireplumber,
         #clock {
           padding: 0 12px;
           margin: 5px 0;
@@ -305,6 +371,9 @@
         #custom-firefox:hover,
         #custom-files:hover,
         #custom-terminal:hover,
+        #cpu:hover,
+        #memory:hover,
+        #disk:hover,
         #taskbar button:hover,
         #workspaces button:hover {
           background: rgba(255, 255, 255, 0.12);
@@ -323,6 +392,10 @@
         #clock {
           margin-right: 6px;
           font-weight: bold;
+        }
+
+        #wireplumber.muted {
+          opacity: 0.55;
         }
       '';
 
@@ -353,6 +426,7 @@
   environment.systemPackages = with pkgs; [
     vim
     git
+    adwaita-icon-theme
     fastfetch
     alacritty
     cosmic-files
