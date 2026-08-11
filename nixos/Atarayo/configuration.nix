@@ -51,33 +51,18 @@
   i18n.inputMethod = {
     enable = true;
     type = "fcitx5";
-    fcitx5 = {
-      waylandFrontend = true;
-      addons = with pkgs; [ fcitx5-mozc ];
-      settings = {
-        globalOptions."Hotkey/AltTriggerKeys" = { };
-        inputMethod = {
-          "Groups/0" = {
-            Name = "Default";
-            "Default Layout" = "us";
-            DefaultIM = "mozc";
-          };
-          "Groups/0/Items/0" = {
-            Name = "keyboard-us";
-            Layout = "";
-          };
-          "Groups/0/Items/1" = {
-            Name = "mozc";
-            Layout = "";
-          };
-          "GroupOrder"."0" = "Default";
-        };
-      };
-    };
+    fcitx5.addons = with pkgs; [ fcitx5-mozc ];
   };
 
   environment.etc."niri/config.kdl".text = ''
     input {
+        keyboard {
+            xkb {
+                layout "us"
+                options "terminate:ctrl_alt_bksp,caps:menu"
+            }
+        }
+
         touchpad {
             tap
             natural-scroll
@@ -99,13 +84,11 @@
     }
 
     spawn-at-startup "waybar"
-    spawn-at-startup "fcitx5" "-d"
     spawn-at-startup "awww-daemon"
     hotkey-overlay { }
     screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
     binds {
-        Caps_Lock { spawn "fcitx5-remote" "-t"; }
         Mod+Shift+Slash { show-hotkey-overlay; }
         Mod+T { spawn "alacritty"; }
         Mod+E { spawn "cosmic-files"; }
