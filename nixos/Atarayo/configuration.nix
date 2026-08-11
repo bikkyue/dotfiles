@@ -178,6 +178,14 @@
       xdg.configFile."alacritty/alacritty.toml".text = ''
         [font]
         normal = { family = "NotoSansM Nerd Font Mono" }
+        size = 14
+
+        [window]
+        decorations = "None"
+        padding = { x = 12, y = 12 }
+
+        [selection]
+        save_to_clipboard = true
 
       '';
 
