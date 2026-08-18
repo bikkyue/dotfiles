@@ -50,7 +50,7 @@
         Mod+T { spawn "alacritty"; }
         Mod+E { spawn "cosmic-files"; }
         Mod+D { spawn "fuzzel"; }
-        Ctrl+B { spawn "firefox"; }
+        Mod+B { spawn "firefox"; }
         Mod+Q { close-window; }
         Mod+O repeat=false { toggle-overview; }
 
@@ -76,6 +76,10 @@
         Print { screenshot; }
         Ctrl+Print { screenshot-screen; }
         Alt+Print { screenshot-window; }
+        Mod+Shift+3 { screenshot-screen; }
+        Mod+Shift+4 { screenshot; }
+        Mod+Shift+5 { screenshot-window; }
+        Mod+Shift+S { screenshot; }
 
         Mod+Shift+E { quit; }
         Mod+Shift+P { power-off-monitors; }
