@@ -56,7 +56,7 @@
       "custom/terminal" = {
         format = "";
         tooltip = "Terminal";
-        on-click = "alacritty";
+        on-click = "alacritty --working-directory /home/bikkyue";
       };
       "custom/separator-apps" = {
         format = "│";
