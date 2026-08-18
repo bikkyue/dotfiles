@@ -2,6 +2,7 @@
 
 {
   imports = [
+    inputs.omp.homeManagerModules.default
     ./modules/fzf.nix
     ./modules/neovim.nix
     ./modules/starship.nix
@@ -33,6 +34,14 @@
       name = "bikkyue";
       email = "121682296+bikkyue@users.noreply.github.com";
     };
+  };
+
+  programs.omp = {
+    enable = true;
+    # OMP's smoke test can delete the Nix builder's working directory.
+    package = inputs.omp.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (_: {
+      doInstallCheck = false;
+    });
   };
 
   # Home Manager のバージョン
