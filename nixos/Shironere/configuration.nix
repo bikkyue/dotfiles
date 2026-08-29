@@ -20,7 +20,8 @@
 
   networking = {
     hostName = "Shironere";
-    firewall.allowedTCPPorts = [ 2283 ];
+    # Trust all traffic arriving through the authenticated Tailnet.
+    firewall.trustedInterfaces = [ "tailscale0" ];
   };
 
   users.users.bikkyue.extraGroups = [ "docker" ];
@@ -29,17 +30,24 @@
     enable = true;
     openFirewall = true;
     settings = {
-      global."map to guest" = "Bad User";
+      global."map to guest" = "Never";
       share = {
         path = "/home/bikkyue/samba/share";
         browseable = "yes";
         "read only" = "no";
-        "guest ok" = "yes";
+        "guest ok" = "no";
+        "valid users" = "bikkyue";
         "force user" = "bikkyue";
         "create mask" = "0664";
         "directory mask" = "0775";
       };
     };
+  };
+
+  services.tailscale = {
+    enable = true;
+    # Permit direct WireGuard connections instead of relying only on DERP.
+    openFirewall = true;
   };
 
   virtualisation.docker.enable = true;

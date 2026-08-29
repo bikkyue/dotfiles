@@ -54,6 +54,31 @@ cd dotfiles
 sudo nixos-rebuild switch --flake ".#<hostname>" --impure
 ```
 
+### Shironereの遠隔運用
+
+ShironereではTailscaleを常時起動し、NixOSが管理するSSH、Samba、XRDPなどの
+受信接続を`tailscale0`からの通信に限定する。移設先のLANにはこれらのポートを
+公開しない。
+
+初回だけ、現地へ移設する前にTailnetへ登録する。設定適用時にLAN経由のSSHが
+閉じるため、以下はShironereのローカルコンソールで実行する。
+
+```bash
+sudo nixos-rebuild switch --flake ".#Shironere" --impure
+sudo tailscale up
+tailscale status
+tailscale ip -4
+```
+
+別のTailnet参加端末からSSHと必要なサービスへ接続できること、および再起動後も
+`tailscale status`が接続済みになることを確認してから移設する。アクセス可能な
+ユーザーや端末はTailscaleのAccess controlsでも制限する。
+
+Docker Composeの`ports`で`0.0.0.0`に公開したポートは、Dockerの転送規則によって
+NixOSの入力ファイアウォールを迂回する場合がある。現在のImmichのTCP 2283が該当
+するため、移設前にCompose側のバインド先またはDockerの`DOCKER-USER`チェインを
+別途Tailnet限定にする。
+
 ### NixOS以外
 
 初回セットアップはmacOSとLinuxで共通
