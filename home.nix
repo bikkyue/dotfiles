@@ -20,7 +20,9 @@
     pkgs.nodejs # JavaScript / TypeScript
     #pkgs.cargo # Rust
     #pkgs.rustc # Rust
-    pkgs.opencode
+    (pkgs.writeShellScriptBin "opencode" ''
+      exec ${pkgs.nodejs}/bin/npx -y opencode-ai@beta "$@"
+    '')
     (pkgs.wrangler.override { nodejs = pkgs.nodejs_22; }) # cloudflare
     pkgs.cloudflared
   ];
