@@ -20,8 +20,6 @@
     pkgs.nodejs # JavaScript / TypeScript
     #pkgs.cargo # Rust
     #pkgs.rustc # Rust
-    # pkgs.jdk21        # Java
-    # pkgs.dotnet-sdk   # C#
     pkgs.opencode
     (pkgs.wrangler.override { nodejs = pkgs.nodejs_22; }) # cloudflare
     pkgs.cloudflared
@@ -34,14 +32,6 @@
       name = "bikkyue";
       email = "121682296+bikkyue@users.noreply.github.com";
     };
-  };
-
-  programs.omp = {
-    enable = true;
-    # OMP's smoke test can delete the Nix builder's working directory.
-    package = inputs.omp.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (_: {
-      doInstallCheck = false;
-    });
   };
 
   # Home Manager のバージョン
