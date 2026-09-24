@@ -5,12 +5,13 @@ NixOSではシステムとユーザー環境を一括管理し、
 macOSと非NixOS LinuxではHome Managerだけを使用する。
 
 ## 構成
-
 ```text
 .
 ├── flake.nix
-├── home.nix
 ├── install.sh
+├── home/
+│   ├── common.nix
+│   └── dev.nix
 ├── modules/
 │   ├── fzf.nix
 │   ├── neovim.nix
@@ -20,24 +21,29 @@ macOSと非NixOS LinuxではHome Managerだけを使用する。
 ├── neovim/
 │   ├── init.lua
 │   └── lua/
-└── nixos/
+└── hosts/
     ├── common-configuration.nix
     ├── Atarayo/
     │   ├── configuration.nix
-    │   └── hardware-configuration.nix
+    │   ├── hardware-configuration.nix
+    │   ├── home.nix
+    │   └── modules/
     └── Shironere/
         ├── configuration.nix
-        └── hardware-configuration.nix
+        ├── hardware-configuration.nix
+        └── home.nix
 ```
 
 - `flake.nix`: NixOSとHome Managerの出力、依存バージョン
-- `home.nix`: 全OSで共有するHome Manager設定
+- `home/common.nix`: 全環境で共有するHome Manager設定
+- `home/dev.nix`: 開発用パッケージ（AtarayoとNixOS以外の環境で使用）
 - `install.sh`: OSを判定して適切なHome ManagerまたはNixOS設定を適用
 - `modules/`: アプリケーションごとのHome Manager module
 - `neovim/`: NeovimのLua設定
-- `nixos/common-configuration.nix`: ユーザー、SSH、NetworkManager、Avahi、Notoフォントなどの共通設定
-- `nixos/Atarayo`: Apple Siliconマシン固有の設定
-- `nixos/Shironere`: x86_64マシン固有の設定
+- `hosts/common-configuration.nix`: ユーザー、SSH、NetworkManager、Avahi、Notoフォントなどの共通設定
+- `hosts/Atarayo`: Apple Siliconマシン固有の設定
+- `hosts/Shironere`: x86_64マシン固有の設定
+- `hosts/<ホスト名>/home.nix`: ホストごとに読み込むHome Manager設定
 
 ## セットアップ
 
