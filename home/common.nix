@@ -14,6 +14,7 @@
 
   home.packages = [
     pkgs.fastfetch
+    pkgs.gh
     pkgs.vim
   ];
 
