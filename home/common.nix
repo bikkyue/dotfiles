@@ -2,6 +2,7 @@
 
 {
   imports = [
+    ../modules/claude-code.nix
     ../modules/fzf.nix
     ../modules/neovim.nix
     ../modules/starship.nix
