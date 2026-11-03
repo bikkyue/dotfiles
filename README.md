@@ -82,7 +82,7 @@ cd ~/dotfiles && nix run home-manager/master -- switch --flake ".#<ホスト名>
 - Node.js
 - tree-sitterとGCC
 - Claude Code（nixpkgsの`claude-code`）
-- OpenCode（npx経由で`opencode-ai@beta`を実行）
+- OpenCode（npx経由で`opencode-ai`を実行）
 - Cloudflare CLI（npx経由で`cf@latest`を実行）
 - Cloudflared
 

@@ -30,7 +30,7 @@ in
       nodejs # JavaScript / TypeScript
       # cargo # Rust
       # rustc # Rust
-      (npxBin "opencode" "opencode-ai@beta")
+      (npxBin "opencode" "opencode-ai")
 
       # Cloudflare
       (npxBin "cf" "cf@latest") # 新CLI（beta）
