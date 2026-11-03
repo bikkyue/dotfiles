@@ -25,7 +25,6 @@ in
       fastfetch
       gh
       vim
-      claude-code
 
       # 開発用
       nodejs # JavaScript / TypeScript
@@ -152,6 +151,19 @@ in
   xdg.configFile."nvim/lua" = {
     source = ./neovim/lua;
     recursive = true;
+  };
+
+  # claude-code
+  programs.claude-code = {
+    enable = true;
+    # ~/.claude/settings.json を書き込み可能なまま、ここに書いた値だけを反映する
+    mutableSettings = true;
+    settings = {
+      model = "opus";
+      modelSettings.claude-sonnet-5.effortLevel = "medium";
+      theme = "dark";
+      language = "japanese";
+    };
   };
 
   # 最初に導入した Home Manager のリリース（HM を更新しても変えない）
