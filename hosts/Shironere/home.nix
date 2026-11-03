@@ -1,5 +1,5 @@
 {
   imports = [
-    ../../home/common.nix
+    ../../home.nix
   ];
 }

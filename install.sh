@@ -40,32 +40,6 @@ enable_flakes() {
     echo "experimental-features = nix-command flakes" >> "$nix_conf"
 }
 
-apply_nixos() {
-    local target
-
-    case "$(hostname)" in
-        Shironere)
-            target="Shironere"
-            if ! sudo test -f /var/lib/cloudflared/token; then
-                echo "[error] Restore /var/lib/cloudflared/token before rebuilding NixOS." >&2
-                exit 1
-            fi
-            ;;
-        Atarayo|atarayo|Geppaku)
-            target="Atarayo"
-            ;;
-        *)
-            echo "[error] No NixOS configuration is defined for $(hostname)." >&2
-            exit 1
-            ;;
-    esac
-
-    echo "[install] Applying the ${target} NixOS configuration..."
-    sudo nixos-rebuild switch \
-        --flake "path:${DOTFILES_DIR}#${target}" \
-        --impure
-}
-
 apply_home_manager() {
     if [ "$(whoami)" != "$USERNAME" ]; then
         echo "[error] Home Manager is configured for ${USERNAME}." >&2
@@ -80,23 +54,28 @@ apply_home_manager() {
             ;;
     esac
 
-    echo "[install] Applying Home Manager configuration ${USERNAME}..."
+    local target="${USERNAME}"
+    local extra_args=(--impure)
+    if [ -e /etc/NIXOS ]; then
+        target="$(hostname)"
+        extra_args=()
+    fi
+
+    echo "[install] Applying Home Manager configuration ${target}..."
     nix run home-manager/master -- switch \
-        --flake "path:${DOTFILES_DIR}" \
-        --impure \
+        --flake "path:${DOTFILES_DIR}#${target}" \
+        "${extra_args[@]}" \
         -b backup
 }
 
 main() {
     echo "=== Dotfiles Setup ==="
 
-    if [ -e /etc/NIXOS ]; then
-        apply_nixos
-    else
+    if [ ! -e /etc/NIXOS ]; then
         install_nix
         enable_flakes
-        apply_home_manager
     fi
+    apply_home_manager
 
     echo "=== Setup Complete ==="
 

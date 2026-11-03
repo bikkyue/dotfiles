@@ -1,103 +1,51 @@
 # dotfiles
 
-NixOSとHome Managerで管理する個人環境。
-NixOSではシステムとユーザー環境を一括管理し、
-macOSと非NixOS LinuxではHome Managerだけを使用する。
+Home Managerで管理する個人のユーザー環境。
+NixOS、macOS、NixOS以外のLinuxのすべてで同じ設定を使用する。
+
+NixOSのシステム設定は別リポジトリの`nixos-config`で管理する。
 
 ## 構成
 ```text
 .
 ├── flake.nix
+├── home.nix
+├── hosts/
+│   ├── Atarayo/home.nix
+│   └── Shironere/home.nix
 ├── install.sh
-├── home/
-│   ├── common.nix
-│   └── dev.nix
-├── modules/
-│   ├── fzf.nix
-│   ├── neovim.nix
-│   ├── starship.nix
-│   ├── tmux.nix
-│   └── zsh.nix
-├── neovim/
-│   ├── init.lua
-│   └── lua/
-└── hosts/
-    ├── common-configuration.nix
-    ├── Atarayo/
-    │   ├── configuration.nix
-    │   ├── hardware-configuration.nix
-    │   ├── home.nix
-    │   └── modules/
-    └── Shironere/
-        ├── configuration.nix
-        ├── hardware-configuration.nix
-        └── home.nix
+└── neovim/
+    ├── init.lua
+    └── lua/
 ```
 
-- `flake.nix`: NixOSとHome Managerの出力、依存バージョン
-- `home/common.nix`: 全環境で共有するHome Manager設定
-- `home/dev.nix`: 開発用パッケージ（AtarayoとNixOS以外の環境で使用）
-- `install.sh`: OSを判定して適切なHome ManagerまたはNixOS設定を適用
-- `modules/`: アプリケーションごとのHome Manager module
+- `flake.nix`: Home Managerの出力と依存バージョン
+- `home.nix`: 全環境共通のHome Manager設定（パッケージ、Git、zsh、tmux、Neovimなど）
+- `hosts/<ホスト名>/home.nix`: `home.nix`を読み込み、ホスト固有の設定を追加する
+- `install.sh`: Nixの導入（NixOS以外）とHome Manager設定の適用
 - `neovim/`: NeovimのLua設定
-- `hosts/common-configuration.nix`: ユーザー、SSH、NetworkManager、Avahi、Notoフォントなどの共通設定
-- `hosts/Atarayo`: Apple Siliconマシン固有の設定
-- `hosts/Shironere`: x86_64マシン固有の設定
-- `hosts/<ホスト名>/home.nix`: ホストごとに読み込むHome Manager設定
 
 ## セットアップ
 
 ```bash
 git clone https://github.com/bikkyue/dotfiles.git
 cd dotfiles
-```
-
-### NixOS
-
-`HOST`には`Atarayo`または`Shironere`を指定する。
-
-```bash
-sudo nixos-rebuild switch --flake ".#<hostname>" --impure
-```
-
-### Shironereの遠隔運用
-
-ShironereではTailscaleを常時起動し、NixOSが管理するSSH、Samba、XRDPなどの
-受信接続を`tailscale0`からの通信に限定する。移設先のLANにはこれらのポートを
-公開しない。
-
-初回だけ、現地へ移設する前にTailnetへ登録する。設定適用時にLAN経由のSSHが
-閉じるため、以下はShironereのローカルコンソールで実行する。
-
-```bash
-sudo nixos-rebuild switch --flake ".#Shironere" --impure
-sudo tailscale up
-tailscale status
-tailscale ip -4
-```
-
-別のTailnet参加端末からSSHと必要なサービスへ接続できること、および再起動後も
-`tailscale status`が接続済みになることを確認してから移設する。アクセス可能な
-ユーザーや端末はTailscaleのAccess controlsでも制限する。
-
-Docker Composeの`ports`で`0.0.0.0`に公開したポートは、Dockerの転送規則によって
-NixOSの入力ファイアウォールを迂回する場合がある。現在のImmichのTCP 2283が該当
-するため、移設前にCompose側のバインド先またはDockerの`DOCKER-USER`チェインを
-別途Tailnet限定にする。
-
-### NixOS以外
-
-初回セットアップはmacOSとLinuxで共通
-
-```bash
 bash install.sh
 ```
 
-以後はHome Managerを直接更新する。
+以後はHome Managerを直接更新する。適用する設定は`#`のあとに指定する。
 
 ```bash
-home-manager switch --flake . --impure
+# NixOS（Atarayo、Shironere）
+home-manager switch --flake ".#Atarayo"
+
+# macOS、NixOS以外のLinux
+home-manager switch --flake ".#bikkyue" --impure
 ```
+
+`bikkyue`は実行中のシステムの種類を判定するため、`--impure`が必要。
+
+NixOSでは、`nixos-config`でシステムを更新した後に、こちらでユーザー環境を更新する。
 
 ## 主なパッケージ
 
@@ -114,9 +62,7 @@ home-manager switch --flake . --impure
 - tree-sitterとGCC
 - OpenCode
 - Claude Code
-- Wrangler
 - Cloudflared
-- Noto CJKとNoto Color Emoji（NixOS）
 
 ## Flake更新
 
@@ -124,4 +70,5 @@ home-manager switch --flake . --impure
 nix flake update
 ```
 
-更新後は、使用しているOSの適用コマンドを再実行する。
+更新後は`home-manager switch`を再実行する。
+`nixos-config`とnixpkgsの版を揃える場合は、両方のリポジトリで同時に更新する。
